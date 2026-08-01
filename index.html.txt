@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Aayushi OS - Girlfriend Day Special</title>
+  <!-- XP.css for authentic Windows XP styling -->
+  <link rel="stylesheet" href="https://unpkg.com/xp.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      font-family: "Tahoma", "Segoe UI", sans-serif;
+    }
+
+    /* Windows XP Desktop */
+    #desktop {
+      width: 100vw;
+      height: calc(100vh - 30px);
+      background: linear-gradient(135deg, #1e5799 0%, #207cca 40%, #7db9e8 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Desktop Icon */
+    .desktop-icon {
+      width: 75px;
+      height: 75px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 15px;
+      cursor: pointer;
+      color: white;
+      text-shadow: 1px 1px 2px black;
+      font-size: 11px;
+      border: 1px solid transparent;
+      border-radius: 3px;
+    }
+    .desktop-icon:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    .desktop-icon img {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 5px;
+    }
+
+    /* Generic Window Custom Styling */
+    .window {
+      position: absolute;
+      width: 320px;
+      max-width: 90vw;
+      box-shadow: 3px 3px 10px rgba(0,0,0,0.4);
+      z-index: 10;
+    }
+    .window-header {
+      cursor: move;
+    }
+    .window-body {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Media & Animations */
+    .gif-cat {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    
+    /* User Custom Photo Styling */
+    .user-photo {
+      width: 180px;
+      height: 140px;
+      object-fit: cover;
+      border: 3px solid #fff;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      border-radius: 4px;
+      margin: 8px 0;
+    }
+
+    .btn-container {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+      width: 100%;
+      justify-content: center;
+      position: relative;
+      height: 35px;
+    }
+
+    /* Smooth Escaping No Button */
+    #btn-no {
+      position: absolute;
+      transition: transform 0.15s ease-out;
+      z-index: 50;
+    }
+
+    /* Win XP Taskbar */
+    #taskbar {
+      height: 30px;
+      background: linear-gradient(to bottom, #1f6bdf 0%, #388cf5 10%, #1f61cc 50%, #1742a1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: absolute;
+      bottom: 0;
+      width: 100vw;
+      z-index: 999;
+      border-top: 1px solid #002e8a;
+    }
+    .start-btn {
+      height: 100%;
+      background: linear-gradient(to bottom, #388e3c 0%, #2e7d32 100%);
+      color: white;
+      font-weight: bold;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      box-shadow: inset 1px 1px 1px #81c784;
+      cursor: pointer;
+    }
+    .system-tray {
+      background: linear-gradient(to bottom, #0e86e7 0%, #08559a 100%);
+      height: 100%;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      color: white;
+      font-size: 11px;
+      border-left: 1px solid #0c5fa4;
+    }
+
+    /* Heart Particle Effects */
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      pointer-events: none;
+      animation: floatUp 1.5s ease-out forwards;
+      z-index: 1000;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-100px) scale(1.5); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="desktop">
+    
+    <!-- Desktop Shortcut -->
+    <div class="desktop-icon" onclick="resetApp()">
+      <img src="https://win98icons.alexmeub.com/icons/png/envelope_closed-0.png" alt="Love Note">
+      <span>For Aayushi.exe</span>
+    </div>
+
+    <!-- MAIN INTERACTIVE WINDOW -->
+    <div class="window" id="main-window" style="top: 10%; left: 50%; transform: translateX(-50%);">
+      <div class="title-bar window-header">
+        <div class="title-bar-text" id="main-title">Happy Girlfriend Day!</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close" onclick="showErrorPopup()"></button>
+        </div>
+      </div>
+
+      <div class="window-body">
+        
+        <!-- STEP 1: Question -->
+        <div id="step-1" class="step">
+          <img class="gif-cat" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHcydjF6ZzRjcnBvd2EydnEydjh6ZzRjcnBvd2EydnEydjh6ZzRjJnB2PWNvbXBhY3QmY3Q9Zw/cLS1ACSA7a2gWM48cq/giphy.gif" alt="Cute Cat">
+          <p>Happy <strong>Girlfriend Day</strong>, Aayushi! 🌹</p>
+          <p style="font-size: 13px; font-weight: bold; margin-top: 5px;">Will you be my girlfriend again? 💖</p>
+          <div class="btn-container" id="btn-box">
+            <button id="btn-yes" onclick="goToStep(2)">Yes! Always 🥰</button>
+            <button id="btn-no">No 😢</button>
+          </div>
+        </div>
+
+        <!-- STEP 2 (NEW): Photo Memory Page -->
+        <div id="step-2" class="step" style="display:none;">
+          <p style="font-size: 12px; font-weight: bold; margin-bottom: 5px;">Memory #1: My Favorite Smile 💕</p>
+          <!-- REPLACE THIS URL WITH YOUR PHOTO -->
+          <img class="user-photo" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400" alt="Memory Photo">
+          <p style="font-size: 11px; color: #333;">Every moment with you is unforgettable, Aayushi.</p>
+          <button style="margin-top: 10px;" onclick="goToStep(3)">Next Memory ✨</button>
+        </div>
+
+        <!-- STEP 3 (NEW): Reasons Why Page -->
+        <div id="step-3" class="step" style="display:none;">
+          <p style="font-size: 13px; font-weight: bold; color: #d32f2f;">Why You're The Best Girlfriend 🌸</p>
+          <ul style="text-align: left; font-size: 11px; padding-left: 20px; line-height: 1.6;">
+            <li>Your cute laugh always fixes my mood.</li>
+            <li>You support me like no one else.</li>
+            <li>You make every single day feel special.</li>
+          </ul>
+          <button style="margin-top: 10px;" onclick="handleFinalYes()">Continue 💖</button>
+        </div>
+
+        <!-- STEP 4: Loading Bar -->
+        <div id="step-4" class="step" style="display:none; width: 100%;">
+          <p>Calculating endless love for Aayushi...</p>
+          <div style="background: #ccc; border: 2px inset #fff; height: 20px; width: 100%; margin: 10px 0;">
+            <div id="progress" style="background: #000080; height: 100%; width: 0%;"></div>
+          </div>
+          <span id="progress-text" style="font-size: 11px;">0%</span>
+        </div>
+
+        <!-- STEP 5: Final Love Letter -->
+        <div id="step-5" class="step" style="display:none;">
+          <img class="gif-cat" src="https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif" alt="Happy Cat">
+          <h3 style="color: #d32f2f; margin: 5px 0;">BEST GIRLFRIEND EVER! 🎉</h3>
+          <div style="background: #fff; border: 1px solid #7f9db9; padding: 10px; font-size: 11px; text-align: left; margin-top: 5px; max-height: 150px; overflow-y: auto;">
+            Dearest Aayushi,<br><br>
+            Happy Girlfriend Day! I am so lucky to have you in my life. Thank you for choosing me every day.<br><br>
+            Here’s to making endless more memories together! ❤️
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- XP ERROR POPUP -->
+    <div class="window" id="error-popup" style="top: 35%; left: 50%; transform: translateX(-50%); display: none; width: 280px; z-index: 100;">
+      <div class="title-bar window-header">
+        <div class="title-bar-text">System Error</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closePopup('error-popup')"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img src="https://win98icons.alexmeub.com/icons/png/msg_error-0.png" width="32" height="32" alt="Error">
+          <span style="font-size: 11px; text-align: left;">Action Denied! You cannot close this until you answer!</span>
+        </div>
+        <button onclick="closePopup('error-popup')">OK</button>
+      </div>
+    </div>
+
+    <!-- VIRUS DETECTED POPUP -->
+    <div class="window" id="virus-popup" style="top: 25%; left: 50%; transform: translateX(-50%); display: none; width: 290px; z-index: 101;">
+      <div class="title-bar window-header" style="background: linear-gradient(to right, #d32f2f, #ef5350);">
+        <div class="title-bar-text">⚠️ VIRUS DETECTED!</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closePopup('virus-popup')"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <img src="https://win98icons.alexmeub.com/icons/png/msg_warning-0.png" width="32" height="32" alt="Warning">
+          <span style="font-size: 11px; text-align: left;">Threat: <strong>Love Overload Virus</strong> detected. Remedy: Click YES immediately!</span>
+        </div>
+        <button onclick="closePopup('virus-popup')">Fix Now</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Taskbar -->
+  <div id="taskbar">
+    <div class="start-btn" onclick="showVirusPopup()">start</div>
+    <div class="system-tray" id="clock">12:00 PM</div>
+  </div>
+
+  <script>
+    // 1. DRAGGABLE WINDOWS MECHANIC
+    document.querySelectorAll('.window').forEach(makeDraggable);
+
+    function makeDraggable(elmnt) {
+      let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+      const header = elmnt.querySelector('.window-header');
+      if (header) {
+        header.onmousedown = dragMouseDown;
+        header.ontouchstart = dragTouchStart;
+      }
+
+      function dragMouseDown(e) {
+        e.preventDefault();
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
+        bringToFront(elmnt);
+      }
+
+      function elementDrag(e) {
+        e.preventDefault();
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      }
+
+      function dragTouchStart(e) {
+        const touch = e.touches[0];
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        document.ontouchend = closeDragElement;
+        document.ontouchmove = elementTouchDrag;
+        bringToFront(elmnt);
+      }
+
+      function elementTouchDrag(e) {
+        const touch = e.touches[0];
+        pos1 = pos3 - touch.clientX;
+        pos2 = pos4 - touch.clientY;
+        pos3 = touch.clientX;
+        pos4 = touch.clientY;
+        elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+        elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+      }
+
+      function closeDragElement() {
+        document.onmouseup = null;
+        document.onmousemove = null;
+        document.ontouchend = null;
+        document.ontouchmove = null;
+      }
+    }
+
+    function bringToFront(elmnt) {
+      document.querySelectorAll('.window').forEach(w => w.style.zIndex = 10);
+      elmnt.style.zIndex = 99;
+    }
+
+    // 2. SMOOTH ESCAPING "NO" BUTTON
+    const btnNo = document.getElementById('btn-no');
+    const container = document.getElementById('btn-box');
+
+    function escapeButton(e) {
+      const rect = container.getBoundingClientRect();
+      const maxX = rect.width - btnNo.offsetWidth;
+      const maxY = 120;
+
+      const newX = (Math.random() - 0.5) * maxX * 1.5;
+      const newY = (Math.random() - 0.5) * maxY * 1.5;
+
+      btnNo.style.transform = `translate(${newX}px, ${newY}px)`;
+      spawnHeart(e.clientX || rect.left, e.clientY || rect.top);
+    }
+
+    btnNo.addEventListener('mouseover', escapeButton);
+    btnNo.addEventListener('touchstart', escapeButton);
+
+    // 3. HEART EXPLOSION EFFECT
+    function spawnHeart(x, y) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.innerText = ['💖', '🌸', '✨', '🥰'][Math.floor(Math.random() * 4)];
+      heart.style.left = x + 'px';
+      heart.style.top = y + 'px';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1500);
+    }
+
+    // 4. STEP NAVIGATION
+    function goToStep(stepNumber) {
+      document.querySelectorAll('.step').forEach(s => s.style.display = 'none');
+      document.getElementById('step-' + stepNumber).style.display = 'block';
+
+      if (stepNumber === 2) {
+        document.getElementById('main-title').innerText = "Our Memories";
+      } else if (stepNumber === 3) {
+        document.getElementById('main-title').innerText = "Reasons Why I Love You";
+      }
+    }
+
+    function handleFinalYes() {
+      goToStep(4);
+      document.getElementById('main-title').innerText = "Analyzing Love Level...";
+
+      // Burst of hearts
+      for(let i = 0; i < 15; i++) {
+        setTimeout(() => {
+          spawnHeart(
+            window.innerWidth / 2 + (Math.random() - 0.5) * 200,
+            window.innerHeight / 2 + (Math.random() - 0.5) * 200
+          );
+        }, i * 50);
+      }
+
+      let pct = 0;
+      const bar = document.getElementById('progress');
+      const text = document.getElementById('progress-text');
+
+      const timer = setInterval(() => {
+        pct += 5;
+        bar.style.width = pct + '%';
+        text.innerText = pct + '%';
+
+        if (pct >= 100) {
+          clearInterval(timer);
+          setTimeout(() => {
+            goToStep(5);
+            document.getElementById('main-title').innerText = "Happy Girlfriend Day! ❤️";
+          }, 300);
+        }
+      }, 60);
+    }
+
+    // 5. POPUPS & CLOCK
+    function showErrorPopup() {
+      const popup = document.getElementById('error-popup');
+      popup.style.display = 'block';
+      bringToFront(popup);
+    }
+
+    function showVirusPopup() {
+      const popup = document.getElementById('virus-popup');
+      popup.style.display = 'block';
+      bringToFront(popup);
+    }
+
+    function closePopup(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function resetApp() {
+      goToStep(1);
+      document.getElementById('main-title').innerText = "Happy Girlfriend Day!";
+      btnNo.style.transform = 'translate(0, 0)';
+    }
+
+    // Live Taskbar Clock
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('clock').innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }, 1000);
+  </script>
+</body>
+</html>
